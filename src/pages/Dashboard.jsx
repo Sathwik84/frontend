@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import CameraFeed from "../components/CameraFeed";
 import { getSentence } from "../utils/languageMap";
 
-const BACKEND = "http://localhost:5000";
+const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
 export default function Dashboard() {
   const [gesture, setGesture] = useState("");
@@ -16,7 +17,9 @@ export default function Dashboard() {
         const json = await res.json();
         setGesture(json.gesture || "");
         setConfidence(json.confidence || 0);
-      } catch {}
+      } catch (err) {
+        console.error("Backend not reachable");
+      }
     }, 800);
 
     return () => clearInterval(interval);
@@ -40,20 +43,18 @@ export default function Dashboard() {
       <div className="page">
         <div className="dashboard-grid">
 
-          {/* CAMERA */}
+          {/* CAMERA (BROWSER CAMERA) */}
           <div className="camera-section">
-            <img
-              src={`${BACKEND}/video`}
-              alt="Live Camera"
-              className="camera-frame"
-            />
+            <CameraFeed />
           </div>
 
           {/* SENTENCE PANEL */}
           <div className="sentence-panel">
             <div className="sentence-row highlight">
               <span><b>English</b></span>
-              <span>{getSentence(gesture, "english") || "Waiting for gesture…"}</span>
+              <span>
+                {getSentence(gesture, "english") || "Waiting for gesture…"}
+              </span>
               <button className="play-btn" onClick={speak}>
                 ▶
               </button>
