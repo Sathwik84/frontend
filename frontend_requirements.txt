@@ -1,0 +1,10 @@
+Node.js version 18 or above
+npm version 9 or above
+
+Frontend Libraries Used
+react
+react-dom
+react-router-dom
+vite
+chart.js
+react-chartjs-2
